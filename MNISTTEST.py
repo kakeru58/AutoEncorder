@@ -24,8 +24,12 @@ def plotHistory(history):
 input_img = Input(shape=(784, )) #28*28
 # 入力された画像がencodeされたものを格納する変数
 encoded = Dense(128, activation='relu')(input_img)#32次元でreluという活性化関数にinput_imgを通す
+encoded = Dense(64, activation='relu')(encoded)#
+encoded = Dense(32, activation='relu')(encoded)#
 # ecnodeされたデータを再構成した画像を格納する変数
-decoded = Dense(784, activation='sigmoid')(encoded)
+decoded = Dense(64, activation='relu')(encoded)
+decoded = Dense(128, activation='relu')(decoded)
+decoded = Dense(784, activation='sigmoid')(decoded)
 # 入力画像を再構成するModelとして定義
 autoencoder = Model(input_img, decoded)#入力と出力
 
@@ -41,6 +45,7 @@ x_test = x_test.astype('float32')/255.
 x_train = x_train.reshape((len(x_train), np.prod(x_train.shape[1:])))#3次元データを2次元データにlenは要素数
 x_valid = x_valid.reshape((len(x_valid), np.prod(x_valid.shape[1:])))#np.prodで1番目からの要素の積(784)
 x_test = x_test.reshape((len(x_test), np.prod(x_test.shape[1:])))
+
 # autoencoderの実行
 plotHistory(
     autoencoder.fit(x_train, x_train,#kerasのfitメゾット
